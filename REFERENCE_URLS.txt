@@ -1,0 +1,13 @@
+[2] canonical spec: https://modelcontextprotocol.io/specification/2026-07-28
+[2] release notes: https://blog.modelcontextprotocol.io/posts/2026-07-28/
+[6] https://a2a-protocol.org/latest/blog/2026/08/27/a-new-chapter-for-a2a-joining-the-agentic-ai-foundation/
+[8] https://datatracker.ietf.org/group/wimse/documents/
+[16] https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/
+[27] https://arxiv.org/abs/2605.17634
+[28] https://arxiv.org/abs/2601.17548
+[35] https://www.codeintegrity.ai/blog/codeintegrity-seed-round
+[39] https://patents.google.com/patent/US12118471
+[40] https://patents.google.com/patent/US20260140791A1/en
+[44] https://arxiv.org/abs/2505.23643
+[47] https://www.axios.com/2026/08/17/a2a-agentic-ai-foundation-open-ai-standards
+[48] https://papers.agoric.com/papers/capability-myths-demolished/abstract/

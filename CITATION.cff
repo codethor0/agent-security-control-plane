@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the paper described under preferred-citation."
+title: "The Agent Security Control Plane: Reproducibility Artifacts"
+type: software
+authors:
+  - family-names: "Thor"
+    given-names: "Thor"
+    affiliation: "Independent Open-Source Researcher, THOR-SEC"
+    orcid: "https://orcid.org/0009-0001-6573-385X"
+date-released: "2026-10-04"
+url: "https://github.com/codethor0/agent-security-control-plane"
+preferred-citation:
+  type: generic
+  title: "The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition"
+  authors:
+    - family-names: "Thor"
+      given-names: "Thor"
+      affiliation: "Independent Open-Source Researcher, THOR-SEC"
+      orcid: "https://orcid.org/0009-0001-6573-385X"
+  year: 2026
+  month: 10
+  day: 4
+  identifiers:
+    - type: doi
+      value: "10.5281/zenodo.23146801"
+    - type: url
+      value: "https://github.com/codethor0/agent-security-control-plane"

@@ -1,0 +1,29 @@
+{
+  "title": "The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition",
+  "description": "Open-source cybersecurity research proposing the Agent Security Control Plane (ASCP), a reference architecture for securing autonomous software agents through workload identity, sponsor-preserving delegation, deterministic authorization, complete mediation at network and local effect boundaries, metadata validation, provenance, revocation, behavioral monitoring, and effect-level accountability. The paper synthesizes public protocols, standards, vulnerabilities, incidents, patents, financing activity, and prior research through October 4, 2026, and presents testable synthesis claims, an explicit delegated-authority model, residual-risk boundaries, and falsifiable forecasts through 2030.",
+  "creators": [
+    {
+      "name": "Thor, Thor",
+      "affiliation": "Independent Open-Source Researcher, THOR-SEC",
+      "orcid": "0009-0001-6573-385X"
+    }
+  ],
+  "keywords": [
+    "AI security",
+    "AI agents",
+    "agent security",
+    "autonomous agents",
+    "zero trust",
+    "agent identity",
+    "delegated authorization",
+    "policy enforcement",
+    "Model Context Protocol",
+    "Agent2Agent",
+    "cybersecurity",
+    "security architecture"
+  ],
+  "license": "cc-by-4.0",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publisher": "Zenodo"
+}

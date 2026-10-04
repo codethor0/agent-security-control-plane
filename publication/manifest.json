@@ -1,0 +1,14 @@
+{
+  "status": "published",
+  "title": "The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition",
+  "publication_date": "2026-10-04",
+  "doi": "10.5281/zenodo.23146801",
+  "concept_doi": "10.5281/zenodo.23146800",
+  "zenodo_record": "https://zenodo.org/records/23146801",
+  "published": {
+    "pdf": "publication/zenodo-23146801/The-Agent-Security-Control-Plane.pdf",
+    "pdf_sha256": "26f5a9bef6a02d2fe8f2f13c33420686fe389f51616d94b7afc220efe80f09f6",
+    "markdown_sha256": "2b473a4d3efdf77503296452e754fbf719093862c66662b0f6476e3a52767ac1",
+    "source_zip_sha256": "ec9b76e0cb3dcf983e913d4c563a35b9342872bb3bbef7cdc6c917b9902eb007"
+  }
+}

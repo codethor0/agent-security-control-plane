@@ -1,0 +1,86 @@
+name: Reproducibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "31 14 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reproducibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Mathematical sanity tests
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -v
+
+      - name: Validate publication surface
+        run: |
+          set -euo pipefail
+          python3 scripts/check_release.py
+
+      - name: Verify public Zenodo DOI
+        run: |
+          set -euo pipefail
+          curl -fsSL https://zenodo.org/api/records/23146801 -o /tmp/zenodo.json
+          jq -e '
+            ((.doi == "10.5281/zenodo.23146801") or (.pids.doi.identifier == "10.5281/zenodo.23146801"))
+            and .metadata.title == "The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition"
+          ' /tmp/zenodo.json >/dev/null
+
+      - name: Validate GitHub repository metadata
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_DESCRIPTION: "Open-source research on deterministic control-plane security for autonomous AI agents."
+          EXPECTED_HOMEPAGE: "https://doi.org/10.5281/zenodo.23146801"
+        run: |
+          set -euo pipefail
+          ok=false
+          for attempt in $(seq 1 30); do
+            repo_json="$(gh api "repos/${GITHUB_REPOSITORY}")"
+            if [ "$(jq -r '.description // ""' <<<"$repo_json")" = "$EXPECTED_DESCRIPTION" ] && \
+               [ "$(jq -r '.homepage // ""' <<<"$repo_json")" = "$EXPECTED_HOMEPAGE" ] && \
+               [ "$(jq -r '.has_issues' <<<"$repo_json")" = "true" ] && \
+               [ "$(jq -r '.has_projects' <<<"$repo_json")" = "false" ] && \
+               [ "$(jq -r '.has_wiki' <<<"$repo_json")" = "false" ]; then
+              ok=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = "true"
+
+          for topic in \
+            ai-security \
+            ai-agents \
+            agent-security \
+            autonomous-agents \
+            cybersecurity \
+            formal-methods \
+            model-context-protocol \
+            preprint \
+            reproducible-research \
+            zero-trust
+          do
+            jq -e --arg topic "$topic" '.topics | index($topic) != null' <<<"$repo_json" >/dev/null
+          done
