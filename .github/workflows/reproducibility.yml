@@ -43,6 +43,27 @@ jobs:
           set -euo pipefail
           python3 scripts/check_repository_hygiene.py
 
+      - name: Validate GitHub README rendering
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          jq -Rs --arg context "$GITHUB_REPOSITORY" \
+            '{text: ., mode: "gfm", context: $context}' README.md \
+            > /tmp/readme-render-request.json
+          gh api --method POST markdown \
+            --input /tmp/readme-render-request.json \
+            > /tmp/readme-rendered.html
+          if grep -Eiq \
+            'katex-error|merror|macros are not allowed|extra open brace|missing close brace' \
+            /tmp/readme-rendered.html; then
+            echo "FAIL: GitHub README renderer reported a math/rendering error"
+            grep -Ei \
+              'katex-error|merror|macros are not allowed|extra open brace|missing close brace' \
+              /tmp/readme-rendered.html || true
+            exit 1
+          fi
+
       - name: Verify public Zenodo DOI
         run: |
           set -euo pipefail

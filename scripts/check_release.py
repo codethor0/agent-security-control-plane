@@ -93,6 +93,14 @@ def main() -> None:
     for marker in (TITLE, DOI, ORCID, "https://github.com/codethor0/agent-security-control-plane"):
         require(marker in cff, f"CITATION.cff marker missing: {marker}")
 
+    # Keep README equations within GitHub's supported math-rendering subset.
+    require(r"\operatorname{" not in readme, "README uses unsupported \operatorname macro")
+    require(r"\textsf{" not in readme, "README uses unsupported \textsf macro")
+    require(r"C_H = \mathrm{Issue}(h,b,\mathrm{mission})" in readme,
+            "GitHub-safe horizontal handoff equation missing")
+    require(r"\bigcap_{j=1}^{i-1} F_j^c" in readme,
+            "GitHub-safe correlated-risk equation missing")
+
     math_markers = (
         r"C_{i+1}\preceq C_i",
         r"C_H = \operatorname{Issue}",

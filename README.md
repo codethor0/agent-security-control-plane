@@ -77,7 +77,7 @@ $$
 Horizontal handoff is different. A planner that does not possess a specialist resource cannot manufacture that authority. A sponsor or authorization broker issues a separately bounded capability:
 
 $$
-C_H = \operatorname{Issue}(h,b,\textsf{mission})
+C_H = \mathrm{Issue}(h,b,\mathrm{mission})
 $$
 
 with sponsor/beneficiary/mission binding enforced before use. This avoids forcing real multi-agent systems into a false hierarchy while still preventing privilege laundering.
@@ -93,8 +93,8 @@ Audit receipt creation is an **obligation attached to an allowed decision**, not
 The paper rejects an independent coin-flip model as a general security model for agent chains. The exact complement-chain identity is:
 
 $$
-P\left(\bigcup_{i=1}^{n}F_i\right)
-= 1 - \prod_{i=1}^{n}\left[1-P\left(F_i\mid\bigcap_{j<i}F_j^c\right)\right]
+P\left(\bigcup_{i=1}^{n} F_i\right)
+= 1 - \prod_{i=1}^{n}\left[1 - P\left(F_i \mid \bigcap_{j=1}^{i-1} F_j^c\right)\right]
 $$
 
 <p align="center">
