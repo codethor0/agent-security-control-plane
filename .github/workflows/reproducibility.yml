@@ -38,14 +38,26 @@ jobs:
           set -euo pipefail
           python3 scripts/check_release.py
 
+      - name: Validate repository hygiene
+        run: |
+          set -euo pipefail
+          python3 scripts/check_repository_hygiene.py
+
       - name: Verify public Zenodo DOI
         run: |
           set -euo pipefail
-          curl -fsSL https://zenodo.org/api/records/23146801 -o /tmp/zenodo.json
+          curl --retry 4 --retry-delay 2 --retry-all-errors -fsSL \
+            https://zenodo.org/api/records/23146801 -o /tmp/zenodo.json
           jq -e '
             ((.doi == "10.5281/zenodo.23146801") or (.pids.doi.identifier == "10.5281/zenodo.23146801"))
             and .metadata.title == "The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition"
           ' /tmp/zenodo.json >/dev/null
+
+      - name: Verify DOI resolver
+        run: |
+          set -euo pipefail
+          curl --retry 4 --retry-delay 2 --retry-all-errors -fsSIL \
+            https://doi.org/10.5281/zenodo.23146801 >/dev/null
 
       - name: Validate GitHub repository metadata
         if: github.event_name != 'pull_request'

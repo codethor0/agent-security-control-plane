@@ -16,6 +16,20 @@ ORCID: [0009-0001-6573-385X](https://orcid.org/0009-0001-6573-385X)
 
 This research was conducted independently on the author's own time and is not sponsored by, affiliated with, or representative of any employer.
 
+## At a Glance
+
+| Item | Value |
+| --- | --- |
+| Publication | *The Agent Security Control Plane: Toward a Zero-Trust Architecture for Autonomous Machine Cognition* |
+| DOI | [10.5281/zenodo.23146801](https://doi.org/10.5281/zenodo.23146801) |
+| Publication date | October 4, 2026 |
+| Model assumption | LLM / agent reasoning is untrusted compute, not the authorization root |
+| Primary boundary | The actual effect boundary: network gateway, local dispatcher, broker, or OS isolation boundary |
+| Architecture | Identity & Delegation, Policy Decision, Policy Enforcement, Observability & Provenance |
+| Figures | 8 reviewed diagrams, preserved as vector PDF plus GitHub PNG previews |
+| Verification | Push, pull request, manual, and weekly scheduled CI |
+| Publication integrity | Root PDF, Markdown, and source ZIP are SHA-256 pinned to the Zenodo publication |
+
 ## Overview
 
 *The Agent Security Control Plane* proposes an architecture-and-evidence synthesis for securing autonomous software agents. It composes workload identity, sponsor-preserving delegation, deterministic authorization, complete mediation at network and local effect boundaries, metadata validation, provenance, revocation, behavioral monitoring, and effect-level accountability outside the language model.
@@ -24,75 +38,144 @@ The paper treats the model as untrusted compute. It distinguishes semantic routi
 
 The contribution is composition and evidence synthesis, not first invention. The architecture is a testable design hypothesis rather than a claim of end-to-end production validation.
 
+## Architecture at a Glance
+
+<p align="center">
+  <img src="figures/fig3_architecture.png" alt="ASCP reference architecture" width="92%">
+</p>
+
+*Figure 3. Logical ASCP security roles. The untrusted model proposes an effect; identity/delegation and deterministic policy decide whether it is allowed; a network or local PEP mediates the actual effect; observability records the resulting decision and outcome.*
+
+The four planes are **logical security roles**, not mandatory microservices and not four required network hops. A local runtime may implement several roles in one process, but the authorization root must remain outside untrusted model reasoning and every consequential effect must cross an enforceable boundary.
+
+## Attack Path: Unmediated vs. Mediated
+
+<p align="center">
+  <img src="figures/fig2_attack_path.png" alt="Unmediated and ASCP-mediated attack paths" width="92%">
+</p>
+
+*Figure 2. Untrusted content can steer a model toward a privileged host API. ASCP inserts a typed effect request, deterministic policy decision, and PEP at the real effect boundary before the external action occurs.*
+
+This is **complete mediation**, not merely gateway placement. If a local Python runtime, tool dispatcher, browser bridge, code runner, or OS API remains directly reachable around the PEP, the architecture has failed its mediation requirement.
+
+## Delegated Authority
+
+### Vertical subdelegation
+
+For hierarchical delegation, a child capability cannot exceed its parent:
+
+$$
+C_{i+1} \preceq C_i
+$$
+
+<p align="center">
+  <img src="figures/fig4_delegation.png" alt="Vertical attenuation and horizontal specialist delegation" width="95%">
+</p>
+
+### Horizontal specialist handoff
+
+Horizontal handoff is different. A planner that does not possess a specialist resource cannot manufacture that authority. A sponsor or authorization broker issues a separately bounded capability:
+
+$$
+C_H = \operatorname{Issue}(h,b,\textsf{mission})
+$$
+
+with sponsor/beneficiary/mission binding enforced before use. This avoids forcing real multi-agent systems into a false hierarchy while still preventing privilege laundering.
+
+## Deterministic Effect Authorization
+
+The baseline allow decision is a **deterministic access-control heuristic**, not a mathematical proof and not a calibrated compromise probability. It composes identity, sponsor context, delegation, capability containment, metadata integrity, data-flow constraints, revocation, and an effect-class threshold.
+
+Audit receipt creation is an **obligation attached to an allowed decision**, not an authorization conjunct. Evidence-store failure can therefore degrade availability without becoming authority to silently allow unsafe effects.
+
+## Correlated Multi-Agent Risk
+
+The paper rejects an independent coin-flip model as a general security model for agent chains. The exact complement-chain identity is:
+
+$$
+P\left(\bigcup_{i=1}^{n}F_i\right)
+= 1 - \prod_{i=1}^{n}\left[1-P\left(F_i\mid\bigcap_{j<i}F_j^c\right)\right]
+$$
+
+<p align="center">
+  <img src="figures/fig8_hop_risk.png" alt="Correlated delegation risk across agents" width="92%">
+</p>
+
+*Figure 8. Shared models, prompts, frameworks, credentials, or policy code create common-cause failure domains. A bypass observed at one node can materially increase downstream conditional risk.*
+
+The expression is an identity, not an empirical exploit-rate estimator. The paper deliberately avoids assigning measured probabilities where no validated measurement exists.
+
+## Evidence Synthesis
+
+<p align="center">
+  <img src="figures/fig1_convergence.png" alt="ASCP evidence convergence mechanism" width="92%">
+</p>
+
+*Figure 1. Protocol surfaces, parallel standardization, and failure evidence motivate the proposed composition. Capital and patent activity are secondary signals, not technical validation.*
+
+<p align="center">
+  <img src="figures/fig5_relationship_map.png" alt="ASCP relationship map" width="92%">
+</p>
+
+*Figure 5. Relationship map connecting protocols, identity/authorization, runtime hooks, vulnerability evidence, prior research, and the proposed ASCP composition.*
+
+The paper does **not** claim that IETF, OpenID, OWASP, NIST, or protocol maintainers intentionally converged on ASCP. It argues that parallel efforts share architectural DNA and create composable primitives that can be tested as a control-plane design.
+
+## Market Signal and Forecasts
+
+<p align="center">
+  <img src="figures/fig6_capital.png" alt="2026 security and control financing sample" width="92%">
+</p>
+
+*Figure 6. A traced $401M lower-bound sample across eight 2026 financings. This is an ecosystem-urgency signal, not validation of the ASCP architecture.*
+
+<p align="center">
+  <img src="figures/fig7_forecasts.png" alt="Falsifiable ASCP forecast set" width="92%">
+</p>
+
+*Figure 7. Seven declared forecasts with judgmental probabilities. The paper preserves the original wording and uses ex-post Brier scoring to prevent retrospective reinterpretation.*
+
 ## Core Contributions
 
 | Area | Contribution |
 | --- | --- |
-| Evidence synthesis | Separates verified protocol/standards/vulnerability evidence from inference, forecasts, patent signals, and capital signals |
-| Complete mediation | Requires consequential effects to cross an enforceable boundary, including local runtime/tool-dispatch paths that bypass network gateways |
+| Evidence discipline | Separates verified protocol/standards/vulnerability evidence from synthesis, forecasts, patent signals, and capital signals |
+| Complete mediation | Requires consequential effects to cross an enforceable boundary, including local paths that bypass network gateways |
 | Delegated authority | Separates vertical attenuation from horizontal handoff and requires separately issued authority for specialist resources |
-| Deterministic authorization | Keeps final high-impact allow/deny authority outside the nondeterministic model |
-| Correlated risk | Replaces independent per-hop hazard assumptions with the exact conditional chain rule |
-| Residual-risk honesty | States that in-scope harmful actions, control-plane compromise, local PEP bypass, and evidence-store DoS remain possible |
-| Forecasting | Publishes falsifiable forecasts with declared subjective probabilities and an ex-post Brier-score rule |
-| Reproducibility | Ships the frozen PDF, Markdown, source ZIP, citation metadata, audit record, hashes, math sanity tests, and CI release checks |
+| Deterministic authorization | Keeps final high-impact allow/deny authority outside nondeterministic model reasoning |
+| Metadata security | Treats poisoned discovery/configuration data as semantic routing hijack, distinct from ACE/RCE |
+| Correlated risk | Uses conditional probability rather than assuming independent per-hop failures |
+| Residual-risk honesty | Preserves authorized-but-harmful action, control-plane compromise, local PEP bypass, and evidence-store DoS as explicit residual risks |
+| Forecasting | Publishes falsifiable forecasts with declared subjective probabilities and a Brier-score rule |
+| Reproducibility | Pins publication hashes, citation metadata, math sanity tests, figure previews, and CI release checks |
 
-## Security Model Highlights
+## What ASCP Bounds - and What It Does Not
 
-### Vertical delegation
+ASCP is intended to bound **external effects outside delegated authority**. It does not claim to solve semantic alignment.
 
-For hierarchical subdelegation, the child capability may not exceed the parent:
+An action can be authenticated, schema-valid, cryptographically attributable, and inside delegated capability while still being harmful. The deterministic control plane can deny out-of-scope effects; it cannot infer hostile intent perfectly from authorized syntax. Effect-class policy, sponsor constraints, human approval where appropriate, behavioral monitoring, and revocation remain separate controls.
 
-```text
-C_(i+1) <= C_i
-```
-
-The paper formalizes this component-wise across resource, operation, data, effect, time, and environmental constraints.
-
-### Horizontal specialist handoff
-
-A planner that lacks a specialist resource cannot mint that authority itself. A sponsor or authorization service issues a separately bounded capability `C_H`, bound to the specialist, sponsor, and delegated mission.
-
-### Deterministic effect authorization
-
-The baseline allow rule requires identity, sponsor context, valid delegation/handoff authority, capability containment, metadata integrity, data-flow permission, non-revocation, and an effect-specific risk threshold. Audit receipt creation is an attached obligation, not a precondition that turns evidence-store availability into authorization authority.
-
-### Correlated delegation risk
-
-The paper rejects the independent coin-flip model as a general security model. The exact complement-chain expression is:
-
-```text
-P(union F_i) = 1 - product_i [1 - P(F_i | all previous F_j did not occur)]
-```
-
-This is an identity, not an empirical compromise-rate estimator. Shared models, frameworks, prompts, credentials, and policy code can create common-cause failures.
-
-## Architecture and Figures
-
-The reviewed vector figures are preserved under [`source/figures/`](source/figures/):
-
-- [Convergence mechanism](source/figures/fig1_convergence.pdf)
-- [Attack path](source/figures/fig2_attack_path.pdf)
-- [Reference architecture](source/figures/fig3_architecture.pdf)
-- [Delegation model](source/figures/fig4_delegation.pdf)
-- [Relationship map](source/figures/fig5_relationship_map.pdf)
-- [Capital signal](source/figures/fig6_capital.pdf)
-- [Forecasts](source/figures/fig7_forecasts.pdf)
-- [Correlated delegation risk](source/figures/fig8_hop_risk.pdf)
+A compromised PDP/PEP is also a high-value failure mode. Tamper-evident records improve detection and accountability; they do not make a compromised enforcement point trustworthy.
 
 ## Continuous Verification
 
-The `Reproducibility` workflow runs on pushes and pull requests to `main`, on manual dispatch, and weekly.
+The `Reproducibility` workflow runs on:
+
+- every push to `main`;
+- every pull request targeting `main`;
+- manual dispatch;
+- a weekly schedule.
 
 It verifies:
 
-- byte identity of the frozen PDF, Markdown, and source ZIP against the published SHA-256 values;
-- the archived Zenodo-version PDF against the repository-root PDF;
+- byte identity of the frozen PDF, Markdown, and source ZIP against published SHA-256 values;
+- the archived Zenodo PDF against the repository-root PDF;
 - DOI, ORCID, title, license, citation, and publication-manifest consistency;
-- the presence of all eight reviewed vector figures;
-- the paper's vertical/horizontal delegation markers, deterministic authorization rule, correlated-risk equation, F7 probability, and explicit guarantee boundaries;
-- small unit tests that sanity-check the delegation examples, weighted risk score, Brier score, and the conditional chain-rule calculation;
-- repository description, homepage, topics, and public settings after publication.
+- all eight vector source figures and all eight GitHub-renderable previews;
+- vertical/horizontal delegation markers, deterministic authorization, correlated-risk math, F7 probability, and explicit guarantee boundaries;
+- mathematical sanity tests for delegation, weighted risk scoring, Brier scoring, and conditional chain-rule examples;
+- public repository hygiene: no local filesystem paths, workstation identifiers, known private-tool traces, common secret formats, or accidental process-artifact directories;
+- the live Zenodo DOI and GitHub repository metadata.
 
 Run locally:
 
@@ -100,7 +183,20 @@ Run locally:
 make check
 ```
 
-These checks validate the public release surface and mathematical bookkeeping. They do **not** prove that the proposed architecture is secure or empirically validated end to end.
+These checks validate the **publication and repository surface**. They do not prove that the proposed architecture is secure or empirically validated end to end.
+
+## Repository Security
+
+The public repository is intentionally narrow:
+
+- no credentials or publication tokens are required by repository code;
+- GitHub Actions runs with `contents: read` only;
+- the only third-party workflow action is `actions/checkout`, pinned to a full commit SHA;
+- Dependabot is limited to GitHub Actions maintenance;
+- release checks fail on common private-key/token patterns, local workstation paths, unexpected audit/process directories, or publication-hash drift;
+- immutable Zenodo artifacts are not rewritten by CI.
+
+See [`SECURITY.md`](SECURITY.md) for reporting and scope.
 
 ## Repository Structure
 
@@ -111,24 +207,27 @@ These checks validate the public release surface and mathematical bookkeeping. T
 | `The-Agent-Security-Control-Plane-source.zip` | Frozen complete source archive | CC BY 4.0 |
 | `source/The-Agent-Security-Control-Plane.tex` | Reviewed LaTeX source extracted from the frozen archive | CC BY 4.0 |
 | `source/figures/*.pdf` | Eight reviewed vector figures | CC BY 4.0 |
+| `figures/*.png` | GitHub-renderable previews generated from the reviewed vector figures | CC BY 4.0 |
 | `publication/manifest.json` | Publication identity and immutable hashes | Metadata |
 | `publication/zenodo-23146801/` | Immutable copy of the published PDF | CC BY 4.0 |
-| `audit/` | Verification log, changelog, hostile self-audit, and frozen Zenodo-side metadata | CC BY 4.0 / metadata |
-| `scripts/check_release.py` | Fail-closed repository/publication consistency checker | MIT |
+| `scripts/check_release.py` | Publication-integrity checker | MIT |
+| `scripts/check_repository_hygiene.py` | Security/disclosure/public-surface checker | MIT |
 | `tests/test_math.py` | Mathematical sanity tests for published model examples | MIT |
-| `.github/workflows/reproducibility.yml` | Continuous release-surface verification | MIT |
+| `.github/workflows/reproducibility.yml` | Continuous verification | MIT |
 | `CITATION.cff` | Machine-readable citation metadata with DOI | Metadata |
-| `.zenodo.json` | Zenodo metadata template used for the publication | Metadata |
+| `.zenodo.json` | Zenodo metadata template | Metadata |
 
 ## Publication
 
 | Item | Value |
 | --- | --- |
 | Publication date | October 4, 2026 |
-| Record | [10.5281/zenodo.23146801](https://doi.org/10.5281/zenodo.23146801) |
+| DOI | [10.5281/zenodo.23146801](https://doi.org/10.5281/zenodo.23146801) |
 | Concept DOI | [10.5281/zenodo.23146800](https://doi.org/10.5281/zenodo.23146800) |
+| Zenodo | [Record 23146801](https://zenodo.org/records/23146801) |
+| Repository | [codethor0/agent-security-control-plane](https://github.com/codethor0/agent-security-control-plane) |
 | Paper license | CC BY 4.0 |
-| Repository | `codethor0/agent-security-control-plane` |
+| Verification | [GitHub Actions](https://github.com/codethor0/agent-security-control-plane/actions) |
 
 ## Related Work by the Author
 
@@ -143,27 +242,13 @@ Thor, T. (2026). *The Agent Security Control Plane: Toward a Zero-Trust Architec
 
 Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
 
-## Research Status and Scope
-
-This work is an open-source architecture-and-evidence synthesis and a proposed reference design. It does **not** claim:
-
-- that standards bodies intentionally converged on ASCP;
-- that the proposed composition is deployed as a production standard;
-- that deterministic authorization solves semantic alignment;
-- that all agent operations naturally cross network gateways;
-- that the policy heuristic is a calibrated probability without deployment validation;
-- that tamper-evident receipts prevent compromise of the control plane;
-- that an authenticated, schema-valid, in-scope action is necessarily safe.
-
-The paper's narrower claim is that consequential effects can be bounded more reliably when authority is externalized from nondeterministic model reasoning and enforced at the actual effect boundary.
-
 ## Review and Feedback
 
 Corrections, counterexamples, missing prior art, mathematical critiques, reproducibility findings, and implementation feedback are welcome. Please open a GitHub issue and identify the relevant section, equation, figure, forecast, or artifact.
 
 ## License
 
-- Paper, manuscript source, figures, and research audit materials: **Creative Commons Attribution 4.0 International (CC BY 4.0)**
+- Paper, manuscript source, figures, and research artifacts: **Creative Commons Attribution 4.0 International (CC BY 4.0)**
 - Verification scripts, tests, and CI configuration: **MIT License**
 
 See [`LICENSE-PAPER.md`](LICENSE-PAPER.md) and [`LICENSE-CODE`](LICENSE-CODE).

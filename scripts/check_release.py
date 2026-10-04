@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +32,7 @@ def main() -> None:
         "The-Agent-Security-Control-Plane.md",
         "The-Agent-Security-Control-Plane-source.zip",
         "README.md",
+        "SECURITY.md",
         "CITATION.cff",
         ".zenodo.json",
         "LICENSE-PAPER.md",
@@ -42,7 +42,9 @@ def main() -> None:
         "publication/manifest.json",
         f"publication/zenodo-{RECORD_ID}/The-Agent-Security-Control-Plane.pdf",
         "scripts/check_release.py",
+        "scripts/check_repository_hygiene.py",
         "tests/test_math.py",
+        ".github/CODEOWNERS",
         ".github/workflows/reproducibility.yml",
     ]
     for rel in required:
@@ -82,13 +84,15 @@ def main() -> None:
         "actions/workflows/reproducibility.yml/badge.svg?branch=main",
         "paper-CC%20BY%204.0",
         "code-MIT",
+        "figures/fig3_architecture.png",
+        "figures/fig4_delegation.png",
+        "figures/fig8_hop_risk.png",
     ):
         require(marker in readme, f"README marker missing: {marker}")
 
     for marker in (TITLE, DOI, ORCID, "https://github.com/codethor0/agent-security-control-plane"):
         require(marker in cff, f"CITATION.cff marker missing: {marker}")
 
-    # Release-surface math and architecture markers from the frozen manuscript.
     math_markers = (
         r"C_{i+1}\preceq C_i",
         r"C_H = \operatorname{Issue}",
@@ -111,31 +115,17 @@ def main() -> None:
     require("can still be harmful" in md, "authorized-but-harmful limitation missing")
 
     figures = sorted((ROOT / "source/figures").glob("*.pdf"))
+    previews = sorted((ROOT / "figures").glob("*.png"))
     require(len(figures) == 8, f"expected 8 vector figures, found {len(figures)}")
-
-    source_tex = ROOT / "source/The-Agent-Security-Control-Plane.tex"
-    require(source_tex.is_file(), "reviewed TeX source missing")
-
-    # No accidental secrets in public text/code/config surfaces.
-    secret_patterns = (
-        r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
-        r"github_pat_[A-Za-z0-9_]",
-        r"AKIA[0-9A-Z]{16}",
-        r"ZENODO_TOKEN\s*=\s*['\"][A-Za-z0-9]",
-    )
-    scan_ext = {".md", ".py", ".json", ".cff", ".yml", ".yaml", ".tex", ".txt"}
-    for path in ROOT.rglob("*"):
-        if path.is_file() and path.suffix.lower() in scan_ext and ".git" not in path.parts:
-            body = path.read_text(encoding="utf-8", errors="ignore")
-            for pattern in secret_patterns:
-                require(not re.search(pattern, body), f"possible secret in {path.relative_to(ROOT)}")
+    require(len(previews) == 8, f"expected 8 figure previews, found {len(previews)}")
+    require((ROOT / "source/The-Agent-Security-Control-Plane.tex").is_file(), "reviewed TeX source missing")
 
     print("RELEASE SURFACE CHECK: PASS")
     print(f"doi={DOI}")
     print(f"pdf_sha256={PDF_SHA}")
     print(f"markdown_sha256={MD_SHA}")
     print(f"source_zip_sha256={SOURCE_SHA}")
-    print(f"figures={len(figures)}")
+    print(f"vector_figures={len(figures)} previews={len(previews)}")
 
 
 if __name__ == "__main__":
