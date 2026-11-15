@@ -252,3 +252,7 @@ Corrections, counterexamples, missing prior art, mathematical critiques, reprodu
 - Verification scripts, tests, and CI configuration: **MIT License**
 
 See [`LICENSE-PAPER.md`](LICENSE-PAPER.md) and [`LICENSE-CODE`](LICENSE-CODE).
+
+## Support
+
+If this research is useful to you, you can support continued independent work through [GitHub Sponsors](https://github.com/sponsors/codethor0).
